@@ -5,27 +5,28 @@
 
 **List Page**
 <br/>
-<img src="./images/list.PNG">
+<img src="./WebContent/static/images/list.PNG">
 
 **Create Page** 
 <br/>
-<img src="./images/add.PNG">
+<img src="./WebContent/static/images/add.PNG">
 
 **Edit Page**
 <br/>
-<img src="./images/update.PNG">
-
-**Search Employee**
-<br/>
-<img src="./images/search.PNG">
-
+<img src="./WebContent/static/images/edit.PNG">
 
 
 ## Technologies Used
-
-- JDBC
-- Swing
-
+- Front-end
+  - Bootstrap 3.x
+  - jQuery 2.x
+  - Ajax
+  - JSP
+- Back-end
+  - Servlet
+  - C3P0
+  - DBUtil
+  - Gson
 
 ## Features
 
@@ -34,6 +35,6 @@
 
 
 ## Requirements
-- Eclipse 2020-12 (4.18.0)
+- Spring Tool Suite 3.9.7.RELEASE
 - Java 1.8
-- Mysql  5.7
+- Mysql 5.7
