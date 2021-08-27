@@ -13,11 +13,15 @@ public interface EmployeeSerivce {
 	PageModel getEmployeesWithPage(int pn) throws Exception;
 
 	Employee getEmployeeById(Integer id) throws SQLException;
+	
+	int getEmployeeName(String name) throws SQLException;
 
 	int save(Employee emp) throws SQLException;
 
 	int update(Employee emp) throws SQLException;
 
 	int delete(Integer id) throws SQLException;
+	
+	int deleteBatch(String ids) throws SQLException; 
 
 }

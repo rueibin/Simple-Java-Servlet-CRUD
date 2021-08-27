@@ -33,6 +33,11 @@ public class EmployeeSerivceImpl implements EmployeeSerivce {
 	public Employee getEmployeeById(Integer id) throws SQLException {
 		return employeeDAO.selectEmployeeById(id);
 	}
+	
+	@Override
+	public int getEmployeeName(String name) throws SQLException {
+		return employeeDAO.selectEmployeeName(name);
+	}
 
 	@Override
 	public int save(Employee emp) throws SQLException {
@@ -51,5 +56,12 @@ public class EmployeeSerivceImpl implements EmployeeSerivce {
 		employeeDAO.delete(id);
 		return 0;
 	}
+
+	@Override
+	public int deleteBatch(String ids) throws SQLException {
+		return employeeDAO.deleteBatch(ids);
+	}
+
+	
 
 }

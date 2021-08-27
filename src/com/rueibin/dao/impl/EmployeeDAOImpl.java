@@ -57,7 +57,7 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 		QueryRunner qr = new QueryRunner(JDBCUtil.getDataSource());
 		BeanProcessor bean = new GenerousBeanProcessor();
 		RowProcessor processor = new BasicRowProcessor(bean);
-		
+
 		List<Map<String, Object>> query = qr.query(sql, new MapListHandler(processor), i, j);
 		List<Employee> emps = new ArrayList<Employee>();
 		for (Map<String, Object> map : query) {
@@ -84,6 +84,15 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 		BeanProcessor bean = new GenerousBeanProcessor();
 		RowProcessor processor = new BasicRowProcessor(bean);
 		return qr.query(sql, new BeanHandler<Employee>(Employee.class, processor), id);
+	}
+	
+	@Override
+	public int selectEmployeeName(String name) throws SQLException {
+		String sql = "select count(id) from employee where name=?";
+		QueryRunner qr = new QueryRunner(JDBCUtil.getDataSource());
+		Long num = (Long) qr.query(sql, new ScalarHandler(),name);
+		return num.intValue();
+		
 	}
 
 	@Override
@@ -120,4 +129,16 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 		return num.intValue();
 	}
 
+	@Override
+	public int deleteBatch(String ids) throws SQLException {
+		String sql = "delete from employee where id=?";
+		QueryRunner qr = new QueryRunner(JDBCUtil.getDataSource());
+		String[] idsStr = ids.split(",");
+		for (int i = 0; i < idsStr.length; i++) {
+			qr.update(sql, Integer.parseInt(idsStr[i]));
+		}
+		return 0;
+	}
+
+	
 }

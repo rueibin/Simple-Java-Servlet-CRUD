@@ -69,6 +69,7 @@
 								<label for="empName_add_input" class="col-sm-4 control-label">employee name</label>
 								<div class="col-sm-8">
 									<input type="text" name="name" class="form-control" placeholder="employee name">
+									<span class="help-block"></span>
 								</div>
 							</div>
 							<div class="form-group">
@@ -118,6 +119,7 @@
 								<label for="empName_edit_input" class="col-sm-4 control-label">employee name</label>
 								<div class="col-sm-8">
 									<input type="text" name="name" class="form-control" placeholder="employee name">
+									<span class="help-block"></span>
 								</div>
 							</div>
 							<div class="form-group">
@@ -178,18 +180,18 @@
 	function bulid_emps_table(result) {
 		$("#emps_table tbody").empty();
 		$.each(result.list, function(index, item) {
-			var checkBoxTD=$("<td><input type='checkbox' class='check_item' /></td>");
-			var empIdTD = $("<td></td>").append(item.id);
-			var empNameTD = $("<td></td>").append(item.name);
-			var genderTD = $("<td></td>").append(item.gender == 1 ? "男" : "女");
-			var emailTD = $("<td></td>").append(item.email);
-			var deptNameTD = $("<td></td>").append(item.dept.name);
+			let checkBoxTD=$("<td><input type='checkbox' class='check_item' /></td>");
+			let empIdTD = $("<td></td>").append(item.id);
+			let empNameTD = $("<td></td>").append(item.name);
+			let genderTD = $("<td></td>").append(item.gender == 1 ? "男" : "女");
+			let emailTD = $("<td></td>").append(item.email);
+			let deptNameTD = $("<td></td>").append(item.dept.name);
 
-			var editBtn = $("<button></button>").addClass("btn btn-primary btn-sm edit_btn").append($("<span></span>").addClass("glyphicon glyphicon-pencil")).append("edit");
+			let editBtn = $("<button></button>").addClass("btn btn-primary btn-sm edit_btn").append($("<span></span>").addClass("glyphicon glyphicon-pencil")).append("edit");
 			editBtn.attr("edit-id",item.id);
-			var delBtn = $("<button></button>").addClass("btn btn-danger btn-sm delete_btn").append($("<span></span>").addClass("glyphicon glyphicon-trash")).append("del");
+			let delBtn = $("<button></button>").addClass("btn btn-danger btn-sm delete_btn").append($("<span></span>").addClass("glyphicon glyphicon-trash")).append("del");
 			delBtn.attr("delete-id",item.id);
-			var btnTD = $("<td></td>").append(editBtn).append(" ").append(delBtn);
+			let btnTD = $("<td></td>").append(editBtn).append(" ").append(delBtn);
 
 			$("<tr></tr>").append(checkBoxTD).append(empIdTD).append(empNameTD).append(genderTD).append(emailTD).append(deptNameTD).append(btnTD).appendTo("#emps_table tbody");
 		});
@@ -207,10 +209,10 @@
 	
 	function build_page_nav(result) {
 		$("#page_nav_area").empty();
-		var ul = $("<ul></ul>").addClass("pagination");
+		let ul = $("<ul></ul>").addClass("pagination");
 
-		var firstPageLi = $("<li></li>").append($("<a></a>").append("首頁").attr("href", "#"));
-		var prePageLi = $("<li></li>").append($("<a></a>").append("&laquo;"));
+		let firstPageLi = $("<li></li>").append($("<a></a>").append("首頁").attr("href", "#"));
+		let prePageLi = $("<li></li>").append($("<a></a>").append("&laquo;"));
 		
 		if (result.startIndex == 0) {
 			firstPageLi.addClass("disabled");
@@ -224,8 +226,8 @@
 			});
 		}
 
-		var nextPageLi = $("<li></li>").append($("<a></a>").append("&raquo;"));
-		var lastPageLi = $("<li></li>").append($("<a></a>").append("末頁").attr("href", "#"));
+		let nextPageLi = $("<li></li>").append($("<a></a>").append("&raquo;"));
+		let lastPageLi = $("<li></li>").append($("<a></a>").append("末頁").attr("href", "#"));
 		if (result.nextPageNum > result.totalPageNum) {
 			nextPageLi.addClass("disabled");
 			lastPageLi.addClass("disabled");
@@ -252,7 +254,7 @@
 		}
 
 		ul.append(nextPageLi).append(lastPageLi);
-		var navEE = $("<nav></nav>").append(ul);
+		let navEE = $("<nav></nav>").append(ul);
 		navEE.appendTo("#page_nav_area");
 	}	
 	
@@ -263,12 +265,12 @@
 			backdrop : "static"
 		});
 	});
-
+		
 	
-	
-	
-	$("#save_btn").click(function(){
-			
+	$("#save_btn").click(function(){		
+		if($(this).attr("ajax-va")=="error"){
+			return false;
+		}
 		
 		$.ajax({
 			url : APP_URL+"/emp?method=saveData",
@@ -279,18 +281,16 @@
 					$("#add_modal").modal("hide");
 					to_page(1);
 				}else{
-					//顯示失敗資訊
-					//console.log(result); //{"code":200,"msg":"fail","extend":{"errorFields":{"email":"格式不正確"}}}
-					//有哪個欄位錯誤就顯示哪個欄位
-					//console.log(result.extend.errorFields.email);
-					//console.log(result.extend.errorFields.empName);
-					if(undefined!=result.extend.errorFields.email){
-						//顯示email錯誤資訊
-						show_validate_msg("#email_add_input","error",result.extend.errorFields.email);
+					let emp = JSON.parse(result);
+					if(undefined!=emp.name){					
+						show_validate_msg("#add_modal input[name='name']","error",emp.name);
+					}else{
+						show_validate_msg("#add_modal input[name='name']","successs","");
 					}
-					if(undefined!=result.extend.errorFields.email){
-						//顯示員工錯誤資訊
-						show_validate_msg("#empName_add_input","error",result.extend.errorFields.empName);
+					if(undefined!=emp.email){
+						show_validate_msg("#add_modal input[name='email']","error",emp.email);
+					}else{
+						show_validate_msg("#add_modal input[name='email']","successs","");
 					}
 				}
 			}
@@ -307,31 +307,46 @@
 		reset_form("#edit_modal form");
 	});
 	
-	$("#update_btn").click(function(){
-		if(!validate_mail("#edit_modal input[name='email']")){
+	$("#update_btn").click(function(){		
+		if($(this).attr("ajax-va")=="error"){
 			return false;
 		}
-
+		
 		$.ajax({
 			url:APP_URL+"/emp?method=updateData",
 			type:"POST",
 			data:$("#edit_modal form").serialize(),
 			success:function(result){					
-				$("#edit_modal").modal("hide");
-				to_page(1);
+				//$("#edit_modal").modal("hide");				
+				if(result==0){
+					$("#edit_modal").modal("hide");
+					to_page(1);
+				}else{
+					let emp = JSON.parse(result);
+					if(undefined!=emp.name){					
+						show_validate_msg("#edit_modal input[name='name']","error",emp.name);
+					}else{
+						show_validate_msg("#edit_modal input[name='name']","successs","");
+					}
+					if(undefined!=emp.email){
+						show_validate_msg("#edit_modal input[name='email']","error",emp.email);
+					}else{
+						show_validate_msg("#edit_modal input[name='email']","successs","");
+					}
+				}
 			}
 		});
 	})
 	
 	$(document).on("click",".delete_btn",function(){
-		var empName=$(this).parents("tr").find("td:eq(2)").text();
+		let empName=$(this).parents("tr").find("td:eq(2)").text();
 		if(confirm("確認刪除"+empName+"嗎?")){
 			$.ajax({
 				url : APP_URL+"/emp?method=deleteData",
 				type:"POST",
 				data:{id:$(this).attr("delete-id")},
 				success:function(result){					
-					to_page(currentPage);
+					to_page(1);
 				}
 			});
 		}
@@ -361,25 +376,31 @@
 			dataType:"json",
 			success:function(result){
 				$.each(result, function(index, item) {
-					var optionEle=$("<option></option>").append(item.name).attr("value",item.id);
+					let optionEle=$("<option></option>").append(item.name).attr("value",item.id);
 					optionEle.appendTo(element);
 				});
 			}
 		});
 	}
 	
-	function validate_mail(element){
-		var email=$(element).val();
-		var regEmail= /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;			              
-		if(!regEmail.test(email)){
-			show_validate_msg(element,"error","email格式不正確");
-		  	return false;
-		}else{
-			show_validate_msg(element,"success","");
-			return true;
-		}
-	}
-	
+	$("#add_modal input[name='name']").change(function(){
+		let empName=this.value;
+		$.ajax({
+			url : APP_URL+"/emp?method=checkEmp",
+			type:"POST",
+			data:"name="+empName,
+			success:function(result){		
+				if(result==0){
+					show_validate_msg("#add_modal input[name='name']" ,"success","員工名稱可以使用");
+					$("save_btn").attr("ajax-va","success");
+				}else{
+					show_validate_msg("#add_modal input[name='name']" ,"error","員工名稱已存在");
+					$("save_btn").attr("ajax-va","error");
+				}
+			}
+		});
+	})
+		
 	function show_validate_msg(element,status,msg){
 		$(element).parent().removeClass("has-success has-error");
 		$(element).next("span").text("");
@@ -406,23 +427,30 @@
 	});
 	
 	$(document).on("click",".check_item",function(){
-		var flag=$(".check_item:checked").length==$(".check_item").length;
+		let flag=$(".check_item:checked").length==$(".check_item").length;
 		$("#check_all").prop("checked",flag);
 	});
 	
 	$("#batch_delete_btn").click(function(){
 		
-		var empNames="";
-		var del_idstr="";
+		let empNames="";
+		let idstr="";
 		$.each($(".check_item:checked"),function(){
 			empNames +=$(this).parents("tr").find("td:eq(2)").text()+","
-			del_idstr +=$(this).parents("tr").find("td:eq(1)").text()+","
+			idstr +=$(this).parents("tr").find("td:eq(1)").text()+","
 		});
 		
 		empNames=empNames.substring(0,empNames.length-1);
-		del_idstr=del_idstr.substring(0,del_idstr.length-1);
+		idstr=idstr.substring(0,idstr.length-1);
 		if(confirm("確認刪除"+empNames+"嗎??")){
-			console.log(del_idstr);
+			$.ajax({
+				url : APP_URL+"/emp?method=deleteBatchData",
+				type:"POST",
+				data:{ids:idstr},
+				success:function(result){					
+					to_page(1);
+				}
+			});
 		}		
 	});
 	
